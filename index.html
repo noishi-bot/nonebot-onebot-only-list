@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>仅支持 OneBot 的插件列表</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 1em;
+      text-align: center;
+      font-size: 1.5em;
+    }
+    main {
+      padding: 2em;
+      max-width: 800px;
+      margin: auto;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+    h2 {
+      color: #333;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      padding: 0.5em 1em;
+      border-bottom: 1px solid #ddd;
+    }
+    li:last-child {
+      border-bottom: none;
+    }
+    .timestamp {
+      font-size: 0.9em;
+      color: #666;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    上架插件市场并直接依赖nonebot-adapter-onebot的nonebot插件列表
+  </header>
+  <main>
+    <div class="timestamp">
+      更新时间: <span id="timestamp">加载中...</span>
+    </div>
+    <h2>插件列表 (<span id="plugin-count">0</span>)</h2>
+    <ul id="plugin-list">
+      <!-- 插件列表将由 JavaScript 加载 -->
+    </ul>
+  </main>
+
+  <script>
+    fetch('onebot_plugins.json')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('timestamp').textContent = data.timestamp || '未知';
+        document.getElementById('plugin-count').textContent = data.num || 0;
+
+        const listEl = document.getElementById('plugin-list');
+        if (Array.isArray(data.name)) {
+          data.name.forEach(name => {
+            const li = document.createElement('li');
+            li.textContent = name;
+            listEl.appendChild(li);
+          });
+        }
+      })
+      .catch(err => {
+        console.error('加载数据失败:', err);
+        document.getElementById('plugin-list').innerHTML = '<li>加载失败，请检查 JSON 文件</li>';
+      });
+  </script>
+</body>
+</html>
